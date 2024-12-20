@@ -126,10 +126,15 @@ class Lattice:
                                      origin_cell=current_cell))
 
         for current_cell in cell_list:
+            # Generate list of connections from base list and dangling list
+            # Populate connections and fill out atom and bond lists
+                # Generate connection list and count bonds per atom
             dangling_bonds = (item['connection'] for item in mirrored_bond_list if
                                   item['origin_cell'] == current_cell)
             connections = self.base_connection_list + list(dangling_bonds)
             for connection in connections:
+                # Hate the generator approach here; should look into something more elegant
+
                 origin = next((atom for atom in self.full_atom_list
                                if (atom.owning_cell == current_cell
                                    and atom.point_type == connection.origin)),None)
@@ -177,6 +182,7 @@ class Lattice:
         """
         Prunes the vector list by recursively removing points that only have a single connection
         """
+        #TODO: Figure out why EVERYTHING is getting pruned
         while True:
             dangler = next((atom for atom in self.full_atom_list if atom.bonds == 1),None)
             if not dangler:
